@@ -1,74 +1,31 @@
-const videos = [
-    "https://www.youtube.com/embed/QHUqTNNDduI?enablejsapi=1",
-    "https://www.youtube.com/embed/ocoAJvXIfe8?enablejsapi=1",
-    "https://www.youtube.com/embed/v0vNYgGxg0?enablejsapi=1",
-    "https://www.youtube.com/embed/ew6Zxy1Amsw?enablejsapi=1",
-    "https://www.youtube.com/embed/d6Cut_VS5wc?enablejsapi=1"
-];
+document.addEventListener("DOMContentLoaded", () => {
+    let currentTask = 0;
+    const videoLinks = [
+        "https://youtube.com/shorts/v0vNYgGxg0w?feature=share",
+        "https://youtube.com/shorts/ew6Zxy1Amsw?feature=share",
+        "https://youtube.com/shorts/d6Cut_VS5wc?feature=share",
+        "https://youtu.be/QHUqTNNDduI",
+        "https://youtu.be/ocoAJvXIfe8"
+    ];
 
-let currentTask = 0;
-let player;
-let videoWatched = false; // Track if user has watched the video
+    function loadTask() {
+        if (currentTask < videoLinks.length) {
+            document.getElementById("videoFrame").src = videoLinks[currentTask];
+            document.getElementById("taskText").innerText = `Task ${currentTask + 1} of ${videoLinks.length}`;
+        } else {
+            document.getElementById("taskText").innerText = "All tasks completed!";
+            document.getElementById("completeBtn").style.display = "none";
+        }
+    }
 
-// Load YouTube IFrame API
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player("youtube-video", {
-        events: {
-            "onStateChange": onPlayerStateChange
+    document.getElementById("completeBtn").addEventListener("click", () => {
+        if (document.getElementById("videoFrame").src.includes("youtu")) {
+            currentTask++;
+            loadTask();
+        } else {
+            alert("Please watch the video before completing the task!");
         }
     });
-}
 
-// When video ends, enable the complete button
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        videoWatched = true;
-        document.getElementById("complete-task").disabled = false;
-    }
-}
-
-// Load a new task
-function loadTask() {
-    if (currentTask < videos.length) {
-        document.getElementById("youtube-video").src = videos[currentTask];
-        document.getElementById("complete-task").disabled = true;
-        document.getElementById("next-task").style.display = "none";
-        videoWatched = false;
-    } else {
-        document.body.innerHTML = "<h2>🎉 All tasks completed! 🎉</h2>";
-    }
-}
-
-// Send completion to Telegram bot
-async function notifyBot() {
-    const botToken = "7532214010:AAGuuMOa2G708Ah4O3uhkgS0KaTwgR5TaEs";
-    const chatId = "USER_TELEGRAM_CHAT_ID"; // Replace with actual user chat ID
-    const message = `User has completed task ${currentTask + 1}`;
-
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: message })
-    });
-}
-
-// Handle task completion
-document.getElementById("complete-task").addEventListener("click", async () => {
-    if (!videoWatched) {
-        alert("⚠ You must watch the full video before completing the task!");
-        return;
-    }
-
-    await notifyBot();
-    document.getElementById("complete-task").style.display = "none";
-    document.getElementById("next-task").style.display = "inline-block";
-});
-
-// Load next task
-document.getElementById("next-task").addEventListener("click", () => {
-    currentTask++;
-    document.getElementById("complete-task").style.display = "inline-block";
     loadTask();
 });
-
-loadTask();

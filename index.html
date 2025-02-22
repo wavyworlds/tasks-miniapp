@@ -3,31 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasks - Tube Earning</title>
+    <title>Tube Earning Tasks</title>
+    <script src="script.js" defer></script>
     <style>
-        #complete-task {
-            font-size: 18px;
-            padding: 10px 20px;
-            margin-top: 10px;
-        }
-        #next-task {
-            font-size: 16px;
-            padding: 8px 16px;
-            margin-top: 10px;
-            display: none;
-        }
+        body { text-align: center; font-family: Arial, sans-serif; }
+        iframe { width: 560px; height: 315px; margin-top: 20px; }
+        button { background: blue; color: white; padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>Watch Videos and Earn</h1>
-
-    <iframe id="youtube-video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-
+    <h1>Watch & Earn</h1>
+    <p id="taskText"></p>
+    <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
     <br>
-    <button id="complete-task" disabled>✅ Complete Task</button>
-    <button id="next-task">➡ Next Task</button>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="script.js"></script>
+    <button id="completeBtn">Complete Task</button>
 </body>
 </html>
